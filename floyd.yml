@@ -1,0 +1,17 @@
+task:
+  train:
+    machine: gpu
+    input:
+      - destination: inputs
+        source: randomquark/datasets/nudepairs/1
+    command: python pix2pix.py --mode train --output_dir trained --input_dir /inputs --max_epochs 200 --which_direction AtoB
+  test:
+    machine: gpu
+    input:
+      - destination: inputs
+        source: randomquark/datasets/pix2pix2/1
+      - destination: model
+        source: randomquark/datasets/pix2pix2/1
+    command: python pix2pix.py --mode test --output_dir results --input_dir /inputs --checkpoint /model/trained --which_direction AtoB
+  # for some reason the yml setup doesnt work using old projects as data inputs, so have to use command below instead for training
+  # floyd run --gpu --data randomquark/projects/pix2pix/76:model "python pix2pix.py --mode test --output_dir results --input_dir ./source --checkpoint /model/trained --which_direction AtoB"
